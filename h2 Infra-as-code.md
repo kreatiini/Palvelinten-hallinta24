@@ -1,10 +1,41 @@
 # h2 Infra-as-code
 
 ## Tiivistelmä tehtävästä, tehtävänannot ja oman tietokoneen tiedot
-Tähän tulee tiivistelmä 
+Alkuun Vagrantin käyttö tuntui tönköltä ja hankalalta ymmärtää. Se alkoi kuitenkin rullaamaan nopeasti. En kohdannut tehtävän aikana yhtään ongelmia ja tehtävät avasivat Saltin toimintaa paremmin kuin ensimmäisen luennon jälkeen. Se varmasti on tarkoituskin.  
 
 ### Tehtävänanto:
-   Tähän tulee tehtävänanto
+-  x) Lue ja tiivistä. (Tässä x-alakohdassa ei tarvitse tehdä testejä tietokoneella, vain lukeminen tai kuunteleminen ja tiivistelmä riittää. Tiivistämiseen riittää muutama ranskalainen viiva. Ei siis vaadita pitkää eikä essee-muotoista tiivistelmää.)
+        Karvinen 2021: Two Machine Virtual Network With Debian 11 Bullseye and Vagrant (Huomaa: nykyinen Debian stable on 12-Bookworm, Vagrantissa "debian/bookworm64". Vanhentunutta 11-bullseye:ta ei enää käytetä)
+  -  Karvinen 2018: Salt Quickstart – Salt Stack Master and Slave on Ubuntu Linux (Huomaa: Nykyisin ennen Saltin asentamista on asennettava ensin varasto [package repository], ohje h1 vinkeissä)
+  -   Karvinen 2014: Hello Salt Infra-as-Code (Huomaa: kannattaa laittaa jokainen moduli omaan kansioonsa toisin kuin artikkelissani. Hyvä: "/srv/salt/hello/init.sls" eli moduli "hello" siististi omana kansionaan. Huono: "/srv/salt/hups.sls" eli sls-tiedostot ja kaikki niihin liittyvät muotit hujan hajan saltin pääkansiossa)
+  - Karvinen 2023: Salt Vagrant - automatically provision one master and two slaves, vain kohdat
+            - Infra as Code - Your wishes as a text file
+
+    - top.sls - What Slave Runs What States
+
+     - Salt contributors: Salt overview, kohdat
+    
+     - Rules of YAML
+     -  YAML simple structure
+     -  Lists and dictionaries - YAML block structures
+    
+    a) Hello Vagrant! Osoita jollain komennolla, että Vagrant on asennettu (esim tulostaa vagrantin versionumeron). Jos et ole vielä asentanut niitä, raportoi myös Vagrant ja VirtualBox asennukset. (Jos Vagrant ja VirtualBox on jo asennettu, niiden asennusta ei tarvitse tehdä eikä raportoida uudelleen.)
+    
+    b) Linux Vagrant. Tee Vagrantilla uusi Linux-virtuaalikone.
+    
+    c) Kaksin kaunihimpi. Tee kahden Linux-tietokoneen verkko Vagrantilla. Osoita, että koneet voivat pingata toisiaan.
+    
+    d) Herra-orja verkossa. Demonstroi Salt herra-orja arkkitehtuurin toimintaa kahden Linux-koneen verkossa, jonka teit Vagrantilla. Asenna toiselle koneelle salt-master, toiselle salt-minion. Laita orjan /etc/salt/minion -tiedostoon masterin osoite. Hyväksy avain ja osoita, että herra voi komentaa orjakonetta.
+    
+    e) Hei infrakoodi! Kokeile paikallisesti (esim 'sudo salt-call --local') infraa koodina. Kirjota sls-tiedosto, joka tekee esimerkkitiedoston /tmp/ -kansioon.
+    
+    f) Aja esimerkki sls-tiedostosi verkon yli orjalla.
+    
+    g) Tee sls-tiedosto, joka käyttää vähintään kahta eri tilafunktiota näistä: package, file, service, user. Tarkista eri ohjelmalla, että lopputulos on oikea. Osoita useammalla ajolla, että sls-tiedostosi on idempotentti.
+    
+    h) Top file. Automatisoi vähintään kahden tilan / modulin ajaminen. Esim. komento 'sudo salt "*" state.apply' tai 'sudo salt-call --local state.apply' ajaa modulit "hello" ja "apache".
+    
+    i) Vapaaehtoinen, haastavahko tässä vaiheessa: Asenna ja konfiguroi Apache. Sen tulee näyttää palvelimen etusivulla weppisivua. Weppisivun tulee olla muokattavissa käyttäjän oikeuksin, ilman sudoa.
   
 ### Tietokoneen tiedot: 
 - Näytönohjain: Asus GeForce RTX 3070 Ti ROG Strix - OC Edition
@@ -23,9 +54,6 @@ Asensin Vagrantin Windows koneelleni jo oppitunnin jälkeen joten tässä versio
 
 ![image](https://github.com/user-attachments/assets/0cfaaa54-e033-4371-bfbf-16b81ee344e9)
 
-
-### Lähteet:
-Tehtävän lähteet tähän
 
 ## b) Linux Vagrant
 Aloitin luomisen tekemällä kansion `vagrant_kansio`. Tämän jälkeen katsoin ohjeista kuinka luodaan yksi Vagrant kone.
@@ -112,19 +140,83 @@ Kävin kommentoimassa `id` kentän alokas koneella ja käynnistin minionin uusik
 Tämän jälkeen kokeilin yksinkertaista komentoa `sudo salt '*' cmd.run 'whoami'` ja sain vastauksen: 
 ![image](https://github.com/user-attachments/assets/6ce61fab-62c4-4963-8563-a76232314fe7)
 Komennot siis toimivat. 
-Tehtävä tuli valmiiksi kotitöiden ohella **Rannekello 21.20 7.11.2024**
+Tehtävä tuli valmiiksi kotitöiden ohella **Rannekello 2120 7112024**
 ### Lähteet:
-Tehtävän lähteet tähän
+- Karvinen 2021: Two Machine Virtual Network With Debian 11 Bullseye and Vagrant Luettavissa: https://terokarvinen.com/2021/two-machine-virtual-network-with-debian-11-bullseye-and-vagrant/ Luettu: 7.11.2024
    
-## tehtävä4
+## e) Hei infrakoodi! (**Rannekello 1555 12112024**)
+Aloitin käynnistämällä molemmat koneet komennolla `vagrant up`. Yhdistin master koneeseen komennolla `vagrant ssh kenraali`. Tämän jälkeen loin tarvittavat kansiot `sudo mkdir -p /srv/salt/hello/` ja siirryin kansioon `cd /srv/salt/hello/`.
+Loin tiedoston `sudoedit hello.sls` ja laitoin sisällön: 
+
+![image](https://github.com/user-attachments/assets/4ef40f63-7e24-4d00-9139-e0eb143ca65e)
+
+Ajoin paikallisesti komennolla `sudo salt-call --local state.apply hello`. Vastaus oli:
+
+![image](https://github.com/user-attachments/assets/31e0b821-adce-44d2-9fde-6bea8e3f47e4)
+
+Tämän jälkeen kävin katsomassa kansiosta:
+
+![image](https://github.com/user-attachments/assets/a9e746f8-961d-4d53-9a74-87ffc5a39575)
+
+Eli tiedosto luotiin onnistunueesti. (**Rannekello 1604 12112024**)
+### Lähteet:
+- Karvinen 2024: Hello Salt Infra-as-Code. Luettavissa: https://terokarvinen.com/2024/hello-salt-infra-as-code/ Luettu 12.11.2024
+
+## f) Aja esimerkki sls-tiedostosi verkon yli orjalla
+Annoin komennon `sudo salt '*' state.apply hello` ulkomuistista. Tulos oli seuraava:
+
+![image](https://github.com/user-attachments/assets/42b0d24a-a6ec-4ded-b996-7624ae996381)
+
+Seuraavana vaihdoin nopeasti `alokas` koneelle katsomaan tilannetta:
+
+![image](https://github.com/user-attachments/assets/d94a56b0-b779-4259-ad68-7181c23e9235)
+
+ja boom tiedosto luotu. 
+
+## e) tuplafunktiot (**Rannekello 1611 12112024**)
+Seuraavana piti tehdä `.sls` tiedosto joka käyttää vähintään kahta tilafunktiota. Päätin käyttää `service` ja `package` tilafunktioita. 
+Aloitin luomalla uuden hakemiston tiedostolle `sudo mkdir tupla` ja tein sinne tiedoston `sudoedit init.sls`. Katselin Saltin dokumentaatiosta mallia tekstin kirjoitusmuotoon ja päädyin seuraavaan:
+
+![image](https://github.com/user-attachments/assets/cbac47be-8245-4136-8185-d6934ba5de9d)
+
+Jonka ymmärtääkseni pitäisi toimia. Ajoin `sudo salt '*' state.apply tupla`. Sain seuraavan vastauksen:
+
+![image](https://github.com/user-attachments/assets/e73a73cc-c42f-4753-8e77-c400175db263)
+
+Tämä siis  asensi Apachen ja asennuksen jälkeen Apache oli jo käynnistynyt itsestään ennen `service.running` ajamista. Ajoin komennon 3 kertaa: 
+
+![image](https://github.com/user-attachments/assets/1693d36d-88d4-4ff8-bd8b-4b871bd05ea7)
+
+Ei muutoksia. Eli tiedosto on idempotentti. Seuraavana siirryin alokkaalle tarkistamaan onko apache päällä ja asennettu:
+
+![image](https://github.com/user-attachments/assets/d693a674-84d1-4801-a07d-0d62984d0be4)
+![image](https://github.com/user-attachments/assets/f3325abf-67b8-408e-a523-dbe4e89d7099)
+
+Tästä näkee vielä että Apache käynnistynyt samaan aikaan kuin ensimmäinen annettu `tupla` komento:
+![image](https://github.com/user-attachments/assets/01fc29e0-631d-4af0-8e57-7888c3a4c006)
+Kello on väärin kenraali ja alokas koneissa.
+### Lähteet:
+- Salt documentation: States tutorial part 1 - Basic Usage. Luettavissa: https://docs.saltproject.io/en/latest/topics/tutorials/states_pt1.html Luettu: 12.11.2024
+- Gite 2024: Linux how long a process has been running?. Luettavissa: https://www.cyberciti.biz/faq/how-to-check-how-long-a-process-has-been-running/ Luettu 12.11.2024
+
+## e) Top file (**Rannekello 1654 12112024**)
+Aloitin luomalla tiedoston `top.sls` hakemistoon `/srv/salt/` eli samaan paikkaan missä muut moduulit ovat. Tämän jälkeen kirjoitin sisällön:
+
+![image](https://github.com/user-attachments/assets/f68ded88-b6d6-4113-a178-7ea94d6361b0)
+
+ja ajoin komennolla `sudo salt "*" state.apply`. Tuloksena oli:
+
+![image](https://github.com/user-attachments/assets/0a0653d1-29bd-4c7f-86a5-0a961a93b322)
+
+Eli komento toimii ja on idempotentti.
 
 ### Lähteet:
-Tehtävän lähteet tähän
-
-## tehtävä5
-
-### Lähteet:
-Tehtävän lähteet tähän
-
+-  Salt documentation: States tutorial part 1 - Basic Usage. Luettavissa: https://docs.saltproject.io/en/latest/topics/tutorials/states_pt1.html Luettu: 12.11.2024
 ## Lähteet:
-   Kaikki lähteet yhteen tähän
+   -  Salt documentation: States tutorial part 1 - Basic Usage. Luettavissa: https://docs.saltproject.io/en/latest/topics/tutorials/states_pt1.html Luettu: 12.11.2024
+   -  Gite 2024: Linux how long a process has been running?. Luettavissa: https://www.cyberciti.biz/faq/how-to-check-how-long-a-process-has-been-running/ Luettu 12.11.2024
+   -  Karvinen 2024: Hello Salt Infra-as-Code. Luettavissa: https://terokarvinen.com/2024/hello-salt-infra-as-code/ Luettu 12.11.2024
+   -  Karvinen 2021: Two Machine Virtual Network With Debian 11 Bullseye and Vagrant Luettavissa: https://terokarvinen.com/2021/two-machine-virtual-network-with-debian-11-bullseye-and-vagrant/ Luettu: 7.11.2024
+   -   Sanna 2021: Setting up Windows virtual test environments with Vagrant. Luettavissa: https://dev.to/sannae/setting-up-windows-virtual-test-environments-with-vagrant-4k1b#create Luettu: 7.11.2024
+   -   Karvinen 2024: Palvelinten hallinta: h2 infra-as-a-code. Luettavissa: https://terokarvinen.com/palvelinten-hallinta/#h2-infra-as-code Luettu: 7.11.2024
+   -   Tehtävät perustuvat kurssiin Palvelinten hallinta(Karvinen 2024) Tehtävät: https://terokarvinen.com/palvelinten-hallinta
