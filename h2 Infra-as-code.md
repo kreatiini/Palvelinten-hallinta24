@@ -49,6 +49,51 @@ Alkuun Vagrantin käyttö tuntui tönköltä ja hankalalta ymmärtää. Se alkoi
 - Operating System: Debian GNU/Linux 12 (bookworm)  
 - Kernel: Linux 6.1.0-25-amd64
 
+## x) Lue ja tiivistä
+
+### Karvinen 2021: [Two Machine Virtual Network With Debian 11 Bullseye and Vagrant](https://terokarvinen.com/2021/two-machine-virtual-network-with-debian-11-bullseye-and-vagrant/)
+- Muista tehdä hakemisto yksittäiselle projektille `mkdir <PROJEKTIN NIMI>/; cd <PROJEKTIN NIMI>/` ja luo sille `Vagrantfile`
+- Varmista Config tiedoston sisältö, etenkin Linux versio
+- Yhdistä oikeaan koneeseen `vagrant ssh <KONEEN NIMI>`
+- Poistu komennolla `exit`
+- `vagrant destroy` poistaaksesi kaikki projektin koneet
+### Karvinen 2018: [Salt Quickstart - Salt Stack Master and Slave on Ubuntu Linux](https://terokarvinen.com/2018/salt-quickstart-salt-stack-master-and-slave-on-ubuntu-linux/?fromSearch=salt%20quickstart%20salt%20stack%20master%20and%20slave%20on%20ubuntu%20linux)
+- Asenna salt-master master koneelle ja salt-minion slave koneelle
+- Muokkaa slave koneen config tiedostosta masterin osoite kuntoon `sudoedit /etc/salt/minion` ja laita `master` riville master koneen osoite
+- Komentojen muodostus esim. `sudo salt '*' cmd.run 'whoami'`
+### Karvinen 2014: [Hello Salt Infra-as-Code](https://terokarvinen.com/2024/hello-salt-infra-as-code/)
+- Asenna Salt koneille
+- Tee `master` koneelle moduuli `sudo mkdir -p /srv/salt/<MODUULIN NIMI>/`
+- Tee moduulin kansioon `init.sls` tiedosto
+- Kirjoita haluamasi ohjeet `init.sls` tiedostoon Saltin kielellä
+- Aja moduuli paikallisesti `sudo salt-call --local state.apply <MODUULIN NIMI>`
+- Ajamisen jälkeen näytölle ilmestyy tiedot tehdyistä toimenpiteistä
+- Varmista että komento toimii esimerkiksi `ls` komennolla mikäli loit tiedoston
+- Idempotenssi komento tarkoittaa että komento ei tee muutoksia vaan haluttu tila on saavutettu
+### Karvinen 2023: [Salt Vagrant - automatically provision one master and two slaves]
+- Tee moduulikansio ja kansioon `init.sls` tiedosto
+- Kirjoitaa `init.sls` tiedostoon YAML syntaksilla ohjeet
+- Aja ohjeet minioneille komennolla `sudo salt '*' state.apply <MODUULIN NIMI>`
+- `top.sls` tiedoston avulla voidaan määrittää mitä tiloja ajetaan millekkin slave koneille
+- Tiedoston luomisen jälkeen pelkkä `sudo salt '*' state.apply` riittää ajamaan määritetyt tilat
+### Salt contributors: [Salt overview](https://docs.saltproject.io/salt/user-guide/en/latest/topics/overview.html#rules-of-yaml)
+- **Scalars** ovat `key: value` sijoituksia. Value voi olla numero, merkkijono tai boolean.
+- **Lists** `key` jonka jälkeen tulee jokainen arvo eri rivillä kahden välilyönnin ja tavuviivan kanssa.
+- **Dictionaries** kokoelma `key: value` sijoituksia ja listoja.
+- YAML organisoidaan block rakenteisiin
+- Sisennys määrittää kontekstin. **KAKSI VÄLILYÖNTIÄ**
+- Alla esimerkki:
+  ```
+  dinner: # Dictionary
+  appetizer: shrimp cocktail # key: value1
+  drink: sparkling water    # key: value2
+  entree: # key
+    - steak # value1
+    - mashed potatoes #value2
+    - dinner roll # value3
+  dessert: # key
+    - chocolate cake # value1
+
 ## a) Hello Vagrant!
 Asensin Vagrantin Windows koneelleni jo oppitunnin jälkeen joten tässä versio:
 
