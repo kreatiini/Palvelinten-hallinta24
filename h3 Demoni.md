@@ -43,27 +43,27 @@ Tähän tulee tiivistelmä
 - Operating System: Debian GNU/Linux 12 (bookworm)  
 - Kernel: Linux 6.1.0-25-amd64
 
-## tehtävä1
+## x) Lue ja tiivistä
 
 ### Lähteet:
 - Tehtävän lähteet tähän
 
-## tehtävä2
+## a) Apache easy mode
 
 ### Lähteet:
 - Tehtävän lähteet tähän
 
-## tehtävä3
+## b) SSHouto
 
 ### Lähteet:
 - Tehtävän lähteet tähän
 
-## tehtävä3
+## c) Oma moduli
 
 ### Lähteet:
 - Tehtävän lähteet tähän
    
-## tehtävä4
+## d) VirtualHost
 
 ### Lähteet:
 - Tehtävän lähteet tähän
