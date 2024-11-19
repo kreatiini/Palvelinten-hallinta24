@@ -1,7 +1,7 @@
 # H3 Demoni
 
 ## Tiivistelmä tehtävästä, tehtävänannot ja oman tietokoneen tiedot
-Tähän tulee tiivistelmä 
+Aloitin tehtävät Vagrant twohosts koneella. Turhauduin, koska Saltin joutui asentamaan aina uudestaan molemmille koneille. Olin järkevä ja käytin "hetken" aikaa Vagrantfilen tekemiseen. Siinä tehdään kaksi konetta, toiseen asentuu salt-minion ja toiseen salt-master. Tämän jälkeen master hyväksyy minionin avaimen automaattisesti. Näin pääsen suoraan töihin. (Tiedoston tekemiseen meni n. 1,5h aikaa joten onko fiksua ajankäyttöä oikeasti...). 
 
 ### Tehtävänanto:
 - x) Lue ja tiivistä. (Tässä x-alakohdassa ei tarvitse tehdä testejä tietokoneella, vain lukeminen tai kuunteleminen ja tiivistelmä riittää. Tiivistämiseen riittää muutama ranskalainen viiva.)
@@ -49,6 +49,26 @@ Tähän tulee tiivistelmä
 - Tehtävän lähteet tähän
 
 ## a) Apache easy mode
+### Ensin käsin
+Kun olin saanut oman salt-minion ja salt-master leikkikentän valmiiksi eli automatisoitua koneiden luomisen pääsin vihdoin hommiin. Aloitin `sudo apt-get update` ja `sudo apt-get upgrade`.
+`sudo apt-get install apache2`. Kurkkasin omasta Linux-palvelimet rapsastani miten oletussivu korvattiin ja tadaa:
+
+![image](https://github.com/user-attachments/assets/cdcc2b04-99b5-41f6-86a0-7cbee5e6c245)
+
+### Automaagista
+Seuraavana poistin koneet `vagrant destroy` ja loin ne uudestaan suoraan Salt valmiudessa ;). 
+- Tein moduuliani varten loogisesti kansion `sudo mkdir -p /srv/salt/apache/`
+- Siirryin sinne `cd /srv/salt/apache`
+- Tein init.sls tiedoston: sudoedit init.sls
+- Katsoin mallia aiemmasta tehtävästä tiedoston muokkaamiseen:
+- ![image](https://github.com/user-attachments/assets/f0a1f51e-d82e-457d-ae4e-395a670924a3)
+
+- laitoin tilat tulille  `sudo salt '*' state.apply apache`
+- ![image](https://github.com/user-attachments/assets/397bff25-604c-4bc5-97c0-90983f4c3f5f)
+- Tulosteena tuli muutokset eli oletustiedoston sisältö ennen muutosta ja lopussa näkyy:
+- ![image](https://github.com/user-attachments/assets/82b9c911-0fde-49ca-92cd-ba89c15789d1)
+- Samassa kuvassa näkyy miten otin yhteyden kenraalilla alokas koneeseen ja katsoin että oletussivu oli vaihtunut
+
 
 ### Lähteet:
 - Tehtävän lähteet tähän
