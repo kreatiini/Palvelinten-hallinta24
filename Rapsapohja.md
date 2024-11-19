@@ -21,32 +21,32 @@ Tähän tulee tiivistelmä
 ## tehtävä1
 
 ### Lähteet:
-Tehtävän lähteet tähän
+- Tehtävän lähteet tähän
 
 ## tehtävä2
 
 ### Lähteet:
-Tehtävän lähteet tähän
+- Tehtävän lähteet tähän
 
 ## tehtävä3
 
 ### Lähteet:
-Tehtävän lähteet tähän
+- Tehtävän lähteet tähän
 
 ## tehtävä3
 
 ### Lähteet:
-Tehtävän lähteet tähän
+- Tehtävän lähteet tähän
    
 ## tehtävä4
 
 ### Lähteet:
-Tehtävän lähteet tähän
+- Tehtävän lähteet tähän
 
 ## tehtävä5
 
 ### Lähteet:
-Tehtävän lähteet tähän
+- Tehtävän lähteet tähän
 
 ## Lähteet:
-   Kaikki lähteet yhteen tähän
+  -  Tehtävät: Karvinen 2024: Palvelinten hallinta. Luettavissa: https://terokarvinen.com/palvelinten-hallinta/
