@@ -44,9 +44,27 @@ Aloitin tehtävät Vagrant twohosts koneella. Turhauduin, koska Saltin joutui as
 - Kernel: Linux 6.1.0-25-amd64
 
 ## x) Lue ja tiivistä
+### Karvinen 2018: Pkg-File-Service – Control Daemons with Salt – Change SSH Server Port
+- tärkeää muistaa laittaa `watch` .sls tiedostoon
+- Aseta haluamasi portti
+- Muista kokeilla
+### `pkg`
+- `pkg` avulla hallinnoidaan ohjelmia koneen omalla paketinhallintajärjestelmällä
+- `pkg.installed` ohjelma asennettu ja jos ei asennetaan
+- `pkg.purged` poistaa jos ei ole vielä poistettu
+### `file`
+- `file` on tiedostojen käsittelyyn tarkoitettu komento.
+- `file.managed` lisää jos ei tiedostoa jo ole
+- `file.absent` poistaa jos on olemassa
+- `file.symlink` linkkaa tiedostot toiseen sijaintiin
+### `service`
+- `service` avulla ohjataan demoneita ja muita ohjelmia.
+- `service.running` käynnistää jos ei jo käynnissä
+- `service.dead` sammuttaa jos ei ole jo pois
+- `enable` käynnistää laitteen käynnistyessä
 
 ### Lähteet:
-- Tehtävän lähteet tähän
+- Karvinen 2018: Pkg-File-Service – Control Daemons with Salt – Change SSH Server Port. Luettavissa: https://terokarvinen.com/2018/04/03/pkg-file-service-control-daemons-with-salt-change-ssh-server-port/?fromSearch=karvinen%20salt%20ssh Luettu: 20.11.2024
 
 ## a) Apache easy mode
 ### Ensin käsin
@@ -122,20 +140,58 @@ Sama onnistui myös portista 22 ja 1234:
 - Karvinen 2018: Pkg-File-Service – Control Daemons with Salt – Change SSH Server Port. Luettavissa: https://terokarvinen.com/2018/04/03/pkg-file-service-control-daemons-with-salt-change-ssh-server-port/?fromSearch=karvinen%20salt%20ssh. Luettu 20.11.2024
 
 ## c) Oma moduli
+Nyt on kyllä paha tehtävä. Ehkä käytän hyödyksi aiemmin luomaani vagrant tiedostoa ja teen jonkinlaisen harjoitusympäristön joka luo valmiiksi kaikki tarvittavat asiat tehokkaaseen harjoitteluun Saltin tai Djangon kanssa.
 
-### Lähteet:
-- Tehtävän lähteet tähän
    
 ## d) VirtualHost
-Aloitin tehtävän siirtymällä alokas koneelle. Alokkaalla loin tavallisen käyttäjän `intiaani`. 
+### Käsitöitä
+Aloitin tehtävän siirtymällä alokas koneelle. Alokkaalla loin tavallisen käyttäjän `intiaani`. Tein muokkaukset :
+- `sudoedit /etc/apache2/sites-available/intiaani.com.conf`
+- ![image](https://github.com/user-attachments/assets/4d6bca16-9fe5-4be3-a184-726cd2d1baaf)
+
+- `sudo a2ensite intiaani.com`
+- `sudo systemctl restart apache2`
+- Vaihdoin käyttäjää: `su intiaani`
+- tein hakemiston `mkdir -p /home/intiaani/publicsites/intiaani.com/`
+- Tein index.html tiedoston `echo inkkari > /home/intiaani/publicsites/intiaani.com/index.html`
+- Kokeilin `curl` komentoa: `curl -H 'Host: intiaani.com' localhost`, vastaus oli `Testari` eli ei toiminut.
+- Vaihdoin takaisin sudokäyttäjälle ja otin default sivun pois käytöstä: `sudo a2dissite 000-default.conf`
+- Demonille kenkää `systemctl reload apache2`
+- ![image](https://github.com/user-attachments/assets/7ee9b2c2-5d3c-4f9a-952c-ea5fd1af0724)
+- Tuttu tilanne joten: `chmod ugo+x /home/intiaani/publicsites/intiaani.com/` ja `chmod ugo+x /home/intiaani/publicsites/intiaani.com/index.html`
+- Potku demonille ja homma rokkaa:
+- ![image](https://github.com/user-attachments/assets/d95c87f8-3ec7-4d12-8959-f2b9e55995f8)
+### Suolaista sadetta
+Seuraavana lähdin rakentamaan automatisointia Saltin avulla. Aloitin poistamalla koneet, pääsen taas puhtaalta pöydältä operoimaan. Laitoin oman Vagrantfilen tulille ja odottelin käynnistymistä. Sillä aikaa hahmottelin mielessäni miten toteutan tehtävän. Käynnistymisen jälkeen kirjauduin kenraalille ja varmistin että yhteys toimii:
+
+![image](https://github.com/user-attachments/assets/c8e11407-eb61-4a42-b1d7-1b248a8cd3d6)
+
+- Loin ensin moduulille hakemiston `mkdir -p /srv/salt/vhost/`
+- Siirryin hakemistoon `cd /srv/salt/vhost`
+- Loin `init.sls` tiedoston `sudoedit init.sls`
+- Tein haluamani tiedoston virtualhostia varten hakemistoon `/srv/salt/`
+- Lähdin ensin miettimään `init.sls` sisältöä ja järjestystä:
+    1. Ensin pitää luoda tavallinen käyttäjä tai varmistaa että sellainen on olemassa
+    2. Tehdä tarvittavat hakemistot
+    3. Siirtää `intiaani.conf` sinne
+    4. Ottaa oletussivu pois ja laittaa `intiaani.com` päälle
+    5. Käynnistää demoni uudestaan
+    6. Laittaa `watch` muutoksia varten
+- Tiedostoa tehdessä luin paljon saltin docseja. Ne olivat onneksi aika hyvät. Oli haasteita hahmottaa omaa tekstiä joten päädyin jakamaan koko paketin osiin. Kokeilin käyttää `file.blockreplace` komentoa mutta se ei onnistunut. Päätin käyttää file.appendia.
+- File.appendin jälkeen sain onnistuneen ilmoituksen. Ajoin komennon pari kertaa ja 8 onnistunutta mutta 2 muuttui joka kerta. 
+- Curlilla testasin onnistuiko ylipäätään asennus:
+- ![image](https://github.com/user-attachments/assets/33cd7676-6e58-4ad6-afb0-0b0d9782f49a)
+- Default sivun pois ottaminen ja intiaani sivun päälle laittaminen näköjään aiheuttavat muutokset. Komennot ajetaan läpi joka kerta mutta ne on jo pois ja päällä ensimmäisen kerran jälkeen. Jonkinlaisella if-lauseella varmasti tämän saisi toteutettua mutta en nyt ala säätämään:
+- ![image](https://github.com/user-attachments/assets/c63f4561-60f0-4009-ac66-8ea90f2a8234)
+- ![image](https://github.com/user-attachments/assets/77f3db2f-c409-462f-8778-d3c4f3daa28e)
+- Eli sivu toimii mutta komento ei ole idempotentti.
+
 
 ### Lähteet:
-- Tehtävän lähteet tähän
+- Salt documentation: https://docs.saltproject.io/en/latest/ref/states/all/salt.states.apache_conf.html
+-  Karvinen 2024: Hello Salt Infra-as-Code. Luettavissa: https://terokarvinen.com/2024/hello-salt-infra-as-code/ Luettu 12.11.2024
+-  
 
-## tehtävä5
-
-### Lähteet:
-- Tehtävän lähteet tähän
 
 ## Lähteet:
   -  Tehtävät: Karvinen 2024: Palvelinten hallinta. Luettavissa: https://terokarvinen.com/palvelinten-hallinta/
