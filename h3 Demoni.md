@@ -74,9 +74,52 @@ Seuraavana poistin koneet `vagrant destroy` ja loin ne uudestaan suoraan Salt va
 - Tehtävän lähteet tähän
 
 ## b) SSHouto
+Lueskelin alkuun ohjeet ja loin tehtävää varten kansion `sshd` salt hakemistoon. Tämän jälkeen loin sinne tiedoston `init.sls`. Kopioin annetun tekstin tiedostooni. Tämän jälkeen tein uuden tiedoston `salt/` hakemistoon nimellä `sshd_config` . Sinne lisäsin portit 22 ja 1234:
+
+![image](https://github.com/user-attachments/assets/c054af6c-3bb9-4e99-b948-13db88d9ad44)
+
+
+Ajettuani komennon `sudo salt '*' state.apply sshd` sain ensin herjan
+
+~~~~
+ alokas:
+Data failed to compile:
+----------
+   Rendering SLS 'base:sshd' failed: mapping values are not allowed here; line 3
+
+openssh-server:
+ pkg.installed
+ /etc/ssh/sshd_config:    <======================
+  file.managed:
+     - source: salt://sshd_config
+     sshd:
+      service.running:
+         - watch:
+[...]
+---
+ERROR: Minions returned with non-zero exit code 
+~~~~
+
+Joten muokkasin hieman tiedoston asettelua ja sain sen toimimaan:
+
+![image](https://github.com/user-attachments/assets/72afa955-95df-4c49-bb7f-3692787e4bce)
+
+
+![image](https://github.com/user-attachments/assets/441e7a28-af29-403d-a7f3-5853bff78aa5)
+
+![image](https://github.com/user-attachments/assets/38fa3880-4065-4b32-88b9-936ee25c9033)
+
+Sain otettua yhteyttä `alokas` koneeseen. En kuitenkaan tiennyt sen salasanaa sillä se oli luotu Vagrantilla. Kokeilin tietysti  `vagrant`, `1234` ja paria muuta. 
+
+![image](https://github.com/user-attachments/assets/9cc59cc8-6f9a-46ba-a264-ddb4f5697e9d)
+
+Sama onnistui myös portista 22 ja 1234:
+
+![image](https://github.com/user-attachments/assets/086aee0e-ae92-4dbe-8d04-bc9fe5e0f377)
+![image](https://github.com/user-attachments/assets/6b20766e-aea7-4c4d-83cf-259b6b06b6d2)
 
 ### Lähteet:
-- Tehtävän lähteet tähän
+- Karvinen 2018: Pkg-File-Service – Control Daemons with Salt – Change SSH Server Port. Luettavissa: https://terokarvinen.com/2018/04/03/pkg-file-service-control-daemons-with-salt-change-ssh-server-port/?fromSearch=karvinen%20salt%20ssh. Luettu 20.11.2024
 
 ## c) Oma moduli
 
@@ -84,6 +127,7 @@ Seuraavana poistin koneet `vagrant destroy` ja loin ne uudestaan suoraan Salt va
 - Tehtävän lähteet tähän
    
 ## d) VirtualHost
+Aloitin tehtävän siirtymällä alokas koneelle. Alokkaalla loin tavallisen käyttäjän `intiaani`. 
 
 ### Lähteet:
 - Tehtävän lähteet tähän
