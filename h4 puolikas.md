@@ -95,6 +95,7 @@ Vagrant.configure("2") do |config|
 		kenraali.vm.hostname = "kenraali"
 		kenraali.vm.network "private_network", ip: "192.168.88.101"
 		kenraali.vm.provision "shell", inline: kenraali_script
+		kenraali.vm.provision "file", source: "TIED" |, destination: "home/vagrant/TIED"
 	end
 	
 end
