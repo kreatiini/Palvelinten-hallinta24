@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
 	
 end
 ~~~
-Ongelmat: Jouduin laittamaan `sleep` komentoja demonien käynnistymisen takia. Muuten demonit eivät ehdi käynnistyä ennen avaimen kysymistä.
+Ongelmat: Jouduin laittamaan `sleep` komentoja demonien käynnistymisen takia. Muuten demonit eivät ehdi käynnistyä ennen avaimen kysymistä. Tämän scriptin testit löytyvät edellisen viikon [tehtävistä](https://github.com/kreatiini/Palvelinten-hallinta24/blob/main/h3%20Demoni.md).
 
 ## Apache conf tiedosto
 ~~~
@@ -121,7 +121,7 @@ Huom! Salasana korvattava omalla vahvalla salasanalla, tässä esimerkin vuoksi 
 apache2:
   pkg.installed
 
-/home/intiaani/publicsites/intiaani.com/index.html:
+/home/intiaani/myproject/app1/static/index.html:
   file.managed:
     - contents: "Tämä on testisivu"
     - makedirs: True
@@ -129,26 +129,26 @@ apache2:
 /etc/hosts:
   file.append:
     - text: |
-        192.168.88.102 intiaani.com
+        192.168.88.102 myproject.com
 
-/etc/apache2/sites-available/intiaani.conf:
+/etc/apache2/sites-available/myproject.conf:
   file.managed:
-    - source: salt://intiaani.conf
+    - source: salt://myproject.conf
 
 disbale_default:
   cmd.run:
     - name: a2dissite 000-default.conf
 
-enable_intiaani:
+enable_myproject:
   cmd.run:
-    - name: a2ensite intiaani.conf
+    - name: a2ensite myproject.conf
 
 apache2_service:
   service.running:
     - name: apache2
     - enable: True
     - watch:
-        - file: /etc/apache2/sites-available/intiaani.conf
+        - file: /etc/apache2/sites-available/myproject.conf
 ~~~
 
 ### ufw + yleiset asetukset
