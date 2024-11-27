@@ -180,6 +180,7 @@ virtualenv:
     - requirements: salt://REQUIREMENTS.txt
     - env_vars:
         PATH_VAR: '/usr/local/bin/'
+    - cwd: /home/intiaani/myproject/app1/
 ~~~
 ## Lähteet:
   -  Tehtävät: Karvinen 2024: Palvelinten hallinta. Luettavissa: https://terokarvinen.com/palvelinten-hallinta/
