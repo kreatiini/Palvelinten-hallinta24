@@ -23,6 +23,7 @@ Puolikas. Tee ensimmäinen vedos omasta modulista. Tätä jatketaan vielä, eli 
 2. Onko turvallista yrittää asentaa Django Saltin avulla vai parempi esim asentaa virtualenv ja luoda hakemisto omille koodeille ja sinne requirements.txt valmiiksi
 3. Apachen Salt scriptin saaminen idempotentiksi(ongelma uudelleenkäynnistymisessä, jokin if ehto lisättävä)
 4. Miten paljon uskaltaa asennustoimia automatisoida?
+5. `init.sls` tiedostojen siirto vagrantin kautta valmiiksi masterille? vai tiedoston luonti vagrantilla ja tekstin syöttö komennoin?
 
 ## Tavoitteet
 Eli oman moduulin suunnitelma ja toivotut ominaisuudet:
