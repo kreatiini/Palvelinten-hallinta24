@@ -171,7 +171,15 @@ ufw.service:
 ### Virtualenv + Django
 Tämän toteutus vielä pohdinnassa vahvasti
 ~~~
+virtualenv:
+  pkg.installed
 
+/home/intiaani/myproject/app1:
+  virtualenv.managed:
+    - system_site_packages: True
+    - requirements: salt://REQUIREMENTS.txt
+    - env_vars:
+        PATH_VAR: '/usr/local/bin/'
 ~~~
 ## Lähteet:
   -  Tehtävät: Karvinen 2024: Palvelinten hallinta. Luettavissa: https://terokarvinen.com/palvelinten-hallinta/
